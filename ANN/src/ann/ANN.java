@@ -29,15 +29,17 @@ public class ANN {
 
         // TODO code application logic here
         double alpha = 0.1;
-        int hn = 3; //hidden neuron
+        int hn = 2; //hidden neuron
         double[] y = new double[hn]; // summing function neuron
-        double fy; //hasil summing function
+        double y2 ; //hasil summing function output
         double[] yy = new double[hn]; //fungsi aktifasi
         double[] b = new double[hn]; //bias hidden
-        double bx; //bias output
+        double output; //output 
+        double boutput; //bias output
         int baris = 1210;
         int kolom = 7;
-        double[] error = new double[kolom]; //error perbaris
+        double error;
+        double error2=0;
         double MSE;
         int[][] data = new int[kolom][baris];
         String[][] train = new String[kolom][baris];
@@ -151,7 +153,7 @@ public class ANN {
             }
         }
 
-        //pindah ke double
+        //pindah dari string ke  double
         for (int i = 0; i < kolom; i++) {
             for (int j = 0; j < baris; j++) {
                 data[i][j] = Integer.parseInt(train[i][j]);
@@ -179,7 +181,7 @@ public class ANN {
 
 
         //bias output
-        double boutput;
+        
 
         //random bobot input , bobot output , bias input, bias output 
         Random r = new Random();
@@ -196,36 +198,56 @@ public class ANN {
 
         boutput = r.nextDouble();
 
-        //start
-//        while (epoch < 2) {
-//            //tampung data ke variabel
-//            for (int i = 0; i < baris; i++) {
-//                x1 = data[0][i];
-//                x2 = data[1][i];
-//                x3 = data[2][i];
-//                x4 = data[3][i];
-//                x5 = data[4][i];
-//                x6 = data[5][i];
-//                target = data[6][i];
-//                
-//                //System.out.println(data[0][i] + " " + data[1][i] + " " + data[2][i] + " " + data[3][i]+ " " + data[4][i]+ " " + data[5][i]);
-//                //System.out.println(x1+ " " + x2 + " " + x3 + " " + x4+ " " + x5+ " " + x6);
-//                
-//                
-//                //hitung maju
-//                for (int j = 0; j < hn; j++) {
-//                    y[j]=((x1*w1[j])+(x2*w2[j]+(x3*w3[j])+ (x4*w4[j]) + (x5*w5[j])+ (x6*w6[j]) +b[j])); //summing function
-//                    yy[j]=(1/(1+Math.exp(-(y[j]))));  //fungsi aktifasi
-//                    System.out.println("iterasi ke "+i+" summing function neuron ke "+(j+1)+" "+yy[j]);
-//                }
-//                
-//                
-//            }
-//            
-//
-//
-//            epoch++;
-//        }
+        //start hitung maju
+        while (epoch < 1) {
+            //tampung data ke variabel
+            for (int i = 0; i < 1; i++) {
+                x1 = data[0][i];
+                x2 = data[1][i];
+                x3 = data[2][i];
+                x4 = data[3][i];
+                x5 = data[4][i];
+                x6 = data[5][i];
+                target = data[6][i];
+                
+                //System.out.println(data[0][i] + " " + data[1][i] + " " + data[2][i] + " " + data[3][i]+ " " + data[4][i]+ " " + data[5][i]);
+                //System.out.println(x1+ " " + x2 + " " + x3 + " " + x4+ " " + x5+ " " + x6);
+                
+                
+
+                
+                //hitung maju sebanyak jumlah neuron
+                for (int j = 0; j < hn; j++) {
+                 //hidden layer
+                    System.out.println(" intput ");
+                    System.out.println(" x1 : " +x1 + " x2 :  " +x2 + " x3 : "+x3 +" x4 : " +x4+" x5 : "+x5 +" x6 : " +x6  );
+                    System.out.println(" bobot ");
+                    System.out.println("1 : " +w1[j]+ " 2 : " + w2[j]+ " 3 : " +w3[j] + " 4 : "+ w4[j]+ " 5 : " + w5[j]+ " 6 : " + w6[j]);
+                    y[j]=((x1*w1[j])+(x2*w2[j]+(x3*w3[j])+ (x4*w4[j]) + (x5*w5[j])+ (x6*w6[j]) +b[j])); //summing function
+                    yy[j]=(1/(1+Math.exp(-(y[j]))));  //fungsi aktifasi
+                    System.out.println("iterasi ke "+(1+i)+" ativation function neuron ke "+(j+1)+" "+yy[j]);
+                 }
+                 //output layer 
+                double temp=0;
+                
+                 for (int k = 0; k < hn; k++) {
+                    temp=yy[k]*Woutput[k]+temp;
+                }
+                System.out.println(" hasil temp "+temp); 
+                y2 = temp + boutput;
+                output = (1/(1+Math.exp(-y2)));
+                System.out.println(" summing function output "+y2);
+                System.out.println(" fungsi aktifasi "+output);
+                error = target-output;
+                error2 = error2 + Math.pow(error, 2);
+                System.out.println(" error " +error);
+                
+            }
+            
+
+
+            epoch++;
+        }
 
     }
 
