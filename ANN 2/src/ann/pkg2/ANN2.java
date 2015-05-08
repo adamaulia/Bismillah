@@ -30,7 +30,7 @@ public class ANN2 {
         
         System.out.println(" ANN 2");
         double alpha = 0.01;
-        int hn = 5; //hidden neuron
+        int hn = 2; //hidden neuron
         double[] y = new double[hn]; // summing function neuron
         double y2; //hasil summing function output
         double[] yy = new double[hn]; //fungsi aktifasi
@@ -238,7 +238,7 @@ public class ANN2 {
                     dw5[j]=error*(1-(Math.pow(output, 2))) * Woutput[j] * (1-(Math.pow(yy[j],2)))*x5*alpha;
                     dw6[j]=error*(1-(Math.pow(output, 2))) * Woutput[j] * (1-(Math.pow(yy[j],2)))*x6*alpha;
                     dwoutput[j]=error*(1-(Math.pow(output, 2)))*Woutput[j]*alpha;
-                    db[j]=error*(1-(Math.pow(output, 2))) * Woutput[j] * yy[j]*alpha;
+                    db[j]=error*(1-(Math.pow(output, 2))) * Woutput[j] * (1-(Math.pow(yy[j],2)))*alpha;
 //                    
                     
 //                    dw1[j]=error*Math.pow((1-output),2) * Woutput[j] * Math.pow((1-yy[j]),2)*x1*alpha; // error * output^2 * bobot hidden ke ouput neuron i * output hidden neuron ke i ^ 2 * input * alpha
@@ -274,6 +274,8 @@ public class ANN2 {
             MSE = error2/baris;
             System.out.println((epoch+1)+" MSE : "+MSE);
             epoch ++;
+            MSE =0;
+            error2=0;
            
             
         }
