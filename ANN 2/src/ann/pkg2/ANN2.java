@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ann;
 
-import com.sun.org.apache.xalan.internal.xsltc.DOM;
+package ann.pkg2;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
@@ -20,17 +20,17 @@ import jxl.read.biff.BiffException;
  *
  * @author Adam
  */
-public class ANN {
+public class ANN2 {
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-
         // TODO code application logic here
-        System.out.println(" ANN 1");
+        
+        System.out.println(" ANN 2");
         double alpha = 0.01;
-        int hn = 2; //hidden neuron
+        int hn = 5; //hidden neuron
         double[] y = new double[hn]; // summing function neuron
         double y2; //hasil summing function output
         double[] yy = new double[hn]; //fungsi aktifasi
@@ -49,7 +49,7 @@ public class ANN {
         double x1, x2, x3, x4, x5, x6, target; //buat input summing function    
         double d2, db2;
         double[] d1 = new double[hn]; //menghitung d1
-        //ambil data
+        
         try {
 
             Workbook w = Workbook.getWorkbook(new File("D:\\don't open\\semester 6\\AI\\Tugasa besar 2\\Dataset1\\training1.xls")); //ambil data
@@ -64,9 +64,9 @@ public class ANN {
                 }
             }
         } catch (IOException ex) {
-            Logger.getLogger(ANN.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ANN2.class.getName()).log(Level.SEVERE, null, ex);
         } catch (BiffException ex) {
-            Logger.getLogger(ANN.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ANN2.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         //preprocessing
@@ -156,7 +156,7 @@ public class ANN {
                 data[i][j] = Double.parseDouble(train[i][j]);
             }
         }
-
+        
         // output 
 //        for (int i = 0; i < baris; i++) {
 //            for (int j = 0; j < kolom; j++) {
@@ -171,6 +171,7 @@ public class ANN {
         double[] w4 = new double[hn];  //dari input 4 
         double[] w5 = new double[hn];  //dari input 5
         double[] w6 = new double[hn];  //dari input 6
+
 
         //delta bobot dan bias
         double[] dw1 = new double[hn];  //new bobot  1
@@ -200,126 +201,85 @@ public class ANN {
 
         boutput = r.nextDouble();
        
-        //start ANN Backpro
-        while (epoch < 100) {
-            
-            //tampung data ke variabel
+        
+        while(epoch < 100){
              
-            for (int i = 0; i < baris; i++) { //looping sebanyak baris data
-                x1 = data[0][i];
-                x2 = data[1][i];
-                x3 = data[2][i];
-                x4 = data[3][i];
-                x5 = data[4][i];
-                x6 = data[5][i];
-                target = data[6][i];
-//                System.out.println("========================================================================================");
-//                System.out.println("iterasi ke "+i);
-                //System.out.println(data[0][i] + " " + data[1][i] + " " + data[2][i] + " " + data[3][i]+ " " + data[4][i]+ " " + data[5][i]);
-                //System.out.println(x1+ " " + x2 + " " + x3 + " " + x4+ " " + x5+ " " + x6);
-                //hitung maju sebanyak jumlah neuron
+            //ambil data
+            for (int i = 0; i < baris; i++) { //baris
+                x1=data[0][i];
+                x2=data[1][i];
+                x3=data[2][i];
+                x4=data[3][i];
+                x5=data[4][i];
+                x6=data[5][i];
+                target=data[6][i];
+                
+                //hitung maju
                 double temp = 0;
                 for (int j = 0; j < hn; j++) {
-//                    hidden layer
-//                    System.out.println(" input ");
-//                    System.out.println(" x1 : " + x1 + " x2 :  " + x2 + " x3 : " + x3 + " x4 : " + x4 + " x5 : " + x5 + " x6 : " + x6);
-//                    System.out.println(" bobot ");
-//                    System.out.println("1 : " + w1[j] + " 2 : " + w2[j] + " 3 : " + w3[j] + " 4 : " + w4[j] + " 5 : " + w5[j] + " 6 : " + w6[j] + " wout " + Woutput[j]);
-                    y[j] = ((x1 * w1[j]) + (x2 * w2[j] + (x3 * w3[j]) + (x4 * w4[j]) + (x5 * w5[j]) + (x6 * w6[j]) + b[j])); //summing function
-                    yy[j] = (1 / (1 + Math.exp(-(y[j]))));  //fungsi aktifasi atau output
-//                    System.out.println("iterasi ke " + (1 + i) + " ativation function neuron ke " + (j + 1) + " " + yy[j]);
-                    temp = yy[j] * Woutput[j] + temp;
+                   y[j]=x1*w1[j]+x2*w2[j]+x3*w3[j]+x4*w4[j]+x5*w5[j]+x6*w6[j]+b[j]; //summing function hidden
+                   yy[j]=1/(1+(Math.exp(-y[j]))); //aktifasi sigmoid hidden
+                   temp = yy[j] * Woutput[j] + temp;  //summing ke output 
                 }
-
-                //output layer 
-//                for (int k = 0; k < hn; k++) {
-//                    temp = yy[k] * Woutput[k];  //buat nampung hasil 
-//                }
-                //System.out.println(" hasil temp " + temp);
-                y2 = temp + boutput;
-                output = (1 / (1 + Math.exp(-y2)));
-//                System.out.println(" summing function output "+y2);
-//                System.out.println(" fungsi aktifasi "+output);
-
-                error =  output - target;
-//                System.out.println(" target : " + target + " error :  " + error + " output " + output);
-                error2 = error2 + Math.pow(error, 2);
-               // System.out.println(" error " + error2);
-
-                //perhitungan mundur
-                //hitung d2
-//                d2 = (1 - Math.pow(output, 2))*error;
-//
-//                //hitung d1
-//                for (int j = 0; j < hn; j++) {
-//                    d1[j] = (1 - Math.pow(yy[j], 2)) * (Woutput[j] * d2);
-//                }
-//
-//                //hitung dw hidden output, db pada hidden output
-//                for (int j = 0; j < hn; j++) {
-//                    dw1[j] = alpha * d1[j] * x1;
-//                    dw2[j] = alpha * d1[j] * x2;
-//                    dw3[j] = alpha * d1[j] * x3;
-//                    dw4[j] = alpha * d1[j] * x4;
-//                    dw5[j] = alpha * d1[j] * x5;
-//                    dw6[j] = alpha * d1[j] * x6;
-//                    dwoutput[j] = alpha * d2 * yy[j];
-//                    db[j] = alpha * d1[j];
-//                }
-//                db2 = alpha * d2;
-//                
+                
+                y2 = temp + boutput; //summing function output
+                output=1/(1+(Math.exp(-y2))); //aktifasi sigmoid output
+                
+                error = target - output;
+                error2= error2 + Math.pow(error, 2); //total error kuadrat
+                //System.out.println(i+" "+error2 );
+                //hitung mundur 
+                
+                for (int j = 0; j < hn; j++) { //hidden dw, bias , woutput , bias output
+                    dw1[j]=error*(1-(Math.pow(output, 2))) * Woutput[j] * (1-(Math.pow(yy[j],2)))*x1*alpha; // error * output^2 * bobot hidden ke ouput neuron i * output hidden neuron ke i ^ 2 * input * alpha
+                    dw2[j]=error*(1-(Math.pow(output, 2))) * Woutput[j] * (1-(Math.pow(yy[j],2)))*x2*alpha;
+                    dw3[j]=error*(1-(Math.pow(output, 2))) * Woutput[j] * (1-(Math.pow(yy[j],2)))*x3*alpha;
+                    dw4[j]=error*(1-(Math.pow(output, 2))) * Woutput[j] * (1-(Math.pow(yy[j],2)))*x4*alpha;
+                    dw5[j]=error*(1-(Math.pow(output, 2))) * Woutput[j] * (1-(Math.pow(yy[j],2)))*x5*alpha;
+                    dw6[j]=error*(1-(Math.pow(output, 2))) * Woutput[j] * (1-(Math.pow(yy[j],2)))*x6*alpha;
+                    dwoutput[j]=error*(1-(Math.pow(output, 2)))*Woutput[j]*alpha;
+                    db[j]=error*(1-(Math.pow(output, 2))) * Woutput[j] * yy[j]*alpha;
+//                    
+                    
+//                    dw1[j]=error*Math.pow((1-output),2) * Woutput[j] * Math.pow((1-yy[j]),2)*x1*alpha; // error * output^2 * bobot hidden ke ouput neuron i * output hidden neuron ke i ^ 2 * input * alpha
+//                    dw2[j]=error*Math.pow((1-output),2) * Woutput[j] * Math.pow((1-yy[j]),2)*x2*alpha;
+//                    dw3[j]=error*Math.pow((1-output),2) * Woutput[j] * Math.pow((1-yy[j]),2)*x3*alpha;
+//                    dw4[j]=error*Math.pow((1-output),2) * Woutput[j] * Math.pow((1-yy[j]),2)*x4*alpha;
+//                    dw5[j]=error*Math.pow((1-output),2) * Woutput[j] * Math.pow((1-yy[j]),2)*x5*alpha;
+//                    dw6[j]=error*Math.pow((1-output),2) * Woutput[j] * Math.pow((1-yy[j]),2)*x6*alpha;
+//                    dwoutput[j]=error*Math.pow((1-output),2)*Woutput[j]*alpha;
+//                    db[j]=error*Math.pow((1-output),2) * Woutput[j] * yy[j]*alpha;
+                }
+               
+                     db2 = error*(1-(Math.pow(output, 2)))*alpha;
+                
+                
+                //update bobot
                 
                 for (int j = 0; j < hn; j++) {
-                    dw1[j]=error*(1-(Math.pow(output, 2)))*Woutput[j]*(1-(Math.pow(yy[j], 2)))*x1*alpha;
-                    dw2[j]=error*(1-(Math.pow(output, 2)))*Woutput[j]*(1-(Math.pow(yy[j], 2)))*x2*alpha;
-                    dw3[j]=error*(1-(Math.pow(output, 2)))*Woutput[j]*(1-(Math.pow(yy[j], 2)))*x3*alpha;
-                    dw4[j]=error*(1-(Math.pow(output, 2)))*Woutput[j]*(1-(Math.pow(yy[j], 2)))*x4*alpha;
-                    dw5[j]=error*(1-(Math.pow(output, 2)))*Woutput[j]*(1-(Math.pow(yy[j], 2)))*x5*alpha;
-                    dw6[j]=error*(1-(Math.pow(output, 2)))*Woutput[j]*(1-(Math.pow(yy[j], 2)))*x6*alpha;
-                    db[j]=error*(1-(Math.pow(output, 2)))*yy[j]*alpha;
-                    dwoutput[j]=error*(1-(Math.pow(output, 2)))*(Woutput[j])*alpha;
-                     }
-
-                db2= error*(1-(Math.pow(output, 2)))*alpha;
-                
-                
-                
-                
-//                System.out.println(" dw  ");
-//                for (int j = 0; j < hn; j++) {
-//
-//                    System.out.println("1 : " + dw1[j] + " 2 : " + dw2[j] + " 3 : " + dw3[j] + " 4 : " + dw4[j] + " 5 : " + dw5[j] + " 6 : " + dw6[j] + " wout " + dwoutput[j]);
-//                }
-                
-                
-                //update bobot hidden output, bias hidden output
-                for (int j = 0; j < hn; j++) {
-                    w1[j] = w1[j] - dw1[j];
-                    w2[j] = w2[j] - dw2[j];
-                    w3[j] = w3[j] - dw3[j];
-                    w4[j] = w4[j] - dw4[j];
-                    w5[j] = w5[j] - dw5[j];
-                    w6[j] = w6[j] - dw6[j];
-                    b[j] = b[j] - db[j];
-                    Woutput[j] = dwoutput[j] - Woutput[j];
+                    w1[j]=dw1[j]+w1[j];
+                    w2[j]=dw2[j]+w2[j];
+                    w3[j]=dw3[j]+w3[j];
+                    w4[j]=dw4[j]+w4[j];
+                    w5[j]=dw1[j]+w5[j];
+                    w6[j]=dw1[j]+w6[j];
+                    Woutput[j]=dwoutput[j]+Woutput[j];
+                    b[j]=db[j]+b[j];
+                    
                 }
-                boutput = boutput - db2;
-
-//                System.out.println(" bobot baru ");
-//                for (int j = 0; j < hn; j++) {
-//
-//                    System.out.println("1 : " + w1[j] + " 2 : " + w2[j] + " 3 : " + w3[j] + " 4 : " + w4[j] + " 5 : " + w5[j] + " 6 : " + w6[j] + " wout " + Woutput[j]);
-//                }
-
+                
+                boutput= db2 + boutput;
             }
-            MSE = error2 / 100;
-            System.out.println((epoch + 1) + "   MSE : " + MSE);
-            //System.out.println("total error kuadrat "+error2);
-            epoch++;
-            MSE=0;
-
+            
+            MSE = error2/baris;
+            System.out.println((epoch+1)+" MSE : "+MSE);
+            epoch ++;
+           
+            
         }
-
+        
+        
+        
     }
-
+    
 }
