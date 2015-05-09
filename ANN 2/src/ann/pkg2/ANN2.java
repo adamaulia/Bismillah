@@ -422,6 +422,7 @@ public class ANN2 {
             y2 = temp + boutput; //summing function output
             output = 1 / (1 + (Math.exp(-y2))); //aktifasi sigmoid output
             error = Math.abs(target - output);
+            error2=error2 + Math.pow(error, 2);
             //error2 = error2 + Math.pow(error, 2); //total error kuadrat
             double aa,bb,cc,dd;
             double ee,ff,gg,hh;
@@ -481,10 +482,13 @@ public class ANN2 {
                     benar++;
                 }
             }
-            System.out.println((i+1)+" target "+target+" output "+output+" benar "+benar);
-        }
+            //System.out.println((i+1)+" target "+target+" output "+output+" benar "+benar);
+            
+        }   
+            MSE=error2/baris_tes;
             double akurasi = (benar/baris_tes)*100;
-            System.out.println(" akurasi "+akurasi);
+            double akurasi2 = (1-Math.sqrt(MSE))*100;
+            System.out.println(" akurasi "+akurasi2);
     }
 
     }
