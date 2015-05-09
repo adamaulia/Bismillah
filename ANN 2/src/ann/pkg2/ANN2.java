@@ -29,8 +29,8 @@ public class ANN2 {
         // TODO code application logic here
         
         System.out.println(" ANN 2");
-        double alpha = 0.01;
-        int hn = 2; //hidden neuron
+        double alpha = 0.1;
+        int hn = 5; //hidden neuron
         double[] y = new double[hn]; // summing function neuron
         double y2; //hasil summing function output
         double[] yy = new double[hn]; //fungsi aktifasi
@@ -39,16 +39,21 @@ public class ANN2 {
         double boutput; //bias output
         int baris = 1210;
         int kolom = 7;
+        int baris_tes=518;
+        int kolom_tes=7;
         double error=0;
         double error2 = 0;
-        double MSE;
+        double MSE=0;
         double [][] data = new double [kolom][baris];
         String[][] train = new String[kolom][baris];
+        String[][] testing = new String[kolom_tes][baris_tes];
+        double [][] test = new double [kolom_tes][baris_tes];
         int maxEpoch = 10;
         int epoch = 0;
         double x1, x2, x3, x4, x5, x6, target; //buat input summing function    
         double d2, db2;
         double[] d1 = new double[hn]; //menghitung d1
+        
         
         try {
 
@@ -202,7 +207,7 @@ public class ANN2 {
         boutput = r.nextDouble();
        
         
-        while(epoch < 100){
+        while(epoch < 1000){
              
             //ambil data
             for (int i = 0; i < baris; i++) { //baris
@@ -280,8 +285,159 @@ public class ANN2 {
             
         }
         
+        // testing 
+        
+        //ambil data testing
+        try {
+
+            Workbook w = Workbook.getWorkbook(new File("D:\\don't open\\semester 6\\AI\\Tugasa besar 2\\Dataset1\\testing 2003.xls")); //ambil data
+            Sheet sh = w.getSheet(1);               //sheet kedua
+
+            for (int k = 0; k < kolom_tes; k++) {
+                for (int j = 0; j < baris_tes; j++) {
+                    Cell c = sh.getCell(k, j);
+                    String isi = c.getContents();
+                    testing[k][j] = isi;
+
+                }
+            }
+            System.out.println(" load data testing done");
+        } catch (IOException ex) {
+            Logger.getLogger(ANN2.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (BiffException ex) {
+            Logger.getLogger(ANN2.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        //preprosessing
         
         
+            for (int j = 0; j < baris_tes; j++) {
+                if (testing[0][j].equals("vhigh")) {
+                    testing[0][j] = "1";
+                }
+                if (testing[0][j].equals("high")) {
+                    testing[0][j] = "0.75";
+                }
+                if (testing[0][j].equals("med")) {
+                    testing[0][j] = "0.50";
+                }
+                if (testing[0][j].equals("low")) {
+                    testing[0][j] = "0.25";
+                }
+                if (testing[1][j].equals("vhigh")) {
+                    testing[1][j] = "1.0";
+                }
+                if (testing[1][j].equals("high")) {
+                    testing[1][j] = "0.75";
+                }
+                if (testing[1][j].equals("med")) {
+                    testing[1][j] = "0.50";
+                }
+                if (testing[1][j].equals("low")) {
+                    testing[1][j] = "0.25";
+                }
+                if (testing[2][j].equals("2")) {
+                    testing[2][j] = "0.25";
+                }
+                if (testing[2][j].equals("3")) {
+                    testing[2][j] = "0.50";
+                }
+                if (testing[2][j].equals("4")) {
+                    testing[2][j] = "0.75";
+                }
+                if (testing[2][j].equals("5more")) {
+                    testing[2][j] = "1.0";
+                }
+                if (testing[3][j].equals("2")) {
+                    testing[3][j] = "0.33";
+                }
+                if (testing[3][j].equals("4")) {
+                    testing[3][j] = "0.66";
+                }
+                if (testing[3][j].equals("more")) {
+                    testing[3][j] = "1.0";
+                }
+                if (testing[4][j].equals("small")) {
+                    testing[4][j] = "0.33";
+                }
+                if (testing[4][j].equals("med")) {
+                    testing[4][j] = "0.66";
+                }
+                if (testing[4][j].equals("big")) {
+                    testing[4][j] = "1.0";
+                }
+                if (testing[5][j].equals("low")) {
+                    testing[5][j] = "0.33";
+                }
+                if (testing[5][j].equals("med")) {
+                    testing[5][j] = "0.66";
+                }
+                if (testing[5][j].equals("high")) {
+                    testing[5][j] = "1";
+                }
+                if (testing[6][j].equals("unacc")) {
+                    testing[6][j] = "0.25";
+                }
+                if (testing[6][j].equals("acc")) {
+                    testing[6][j] = "0.50";
+                }
+                if (testing[6][j].equals("good")) {
+                    testing[6][j] = "0.75";
+                }
+                if (testing[6][j].equals("vgood")) {
+                    testing[6][j] = "1.0";
+                }
+            }
+            
+            //output
+
+            //pindah dari string ke  double
+        for (int i = 0; i < kolom_tes; i++) {
+            for (int j = 0; j < baris_tes; j++) {
+                test[i][j] = Double.parseDouble(testing[i][j]);
+            }
+        }
+        double benar=0;    
+        for (int i = 0; i < baris_tes; i++) {
+            x1 = test[0][i];
+            x2 = test[1][i];
+            x3 = test[2][i];
+            x4 = test[3][i];
+            x5 = test[4][i];
+            x6 = test[5][i];
+            target = test[6][i];
+            
+            
+         
+            double temp = 0;
+            for (int j = 0; j < hn; j++) {
+                y[j] = x1 * w1[j] + x2 * w2[j] + x3 * w3[j] + x4 * w4[j] + x5 * w5[j] + x6 * w6[j] + b[j]; //summing function hidden
+                yy[j] = 1 / (1 + (Math.exp(-y[j]))); //aktifasi sigmoid hidden
+                temp = yy[j] * Woutput[j] + temp;  //summing ke output 
+            }
+            
+            y2 = temp + boutput; //summing function output
+            output = 1 / (1 + (Math.exp(-y2))); //aktifasi sigmoid output
+            error = Math.abs(target - output);
+            //error2 = error2 + Math.pow(error, 2); //total error kuadrat
+            double aa,bb,cc,dd;
+            
+            System.out.println("error " +error+" output"+output);
+            aa=error-0.25;
+            bb=error-0.50;
+            cc=error-0.75;
+            dd=error-1.0;
+            System.out.println("aa "+aa+" bb "+bb+" cc "+cc+" dd "+dd);
+//            
+//            if(((output>0)&&(output<0.25))||((output>0.25)&&(output<0.50))||((output>0.50)&&(output<0.75))||((output>0.75)&&(output<1.0))){
+//                benar++;
+//            }
+            System.out.println((i+1)+" target "+target+" output "+output+" benar "+benar);
+        }
+            double akurasi = (benar/baris_tes)*100;
+            System.out.println(" akurasi "+akurasi);
+    }
+
     }
     
-}
+
