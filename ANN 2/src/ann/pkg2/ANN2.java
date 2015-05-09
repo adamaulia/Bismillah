@@ -37,9 +37,12 @@ public class ANN2 {
         double[] b = new double[hn]; //bias hidden
         double output = 0; //output 
         double boutput; //bias output
-        int baris = 1210;
+        int baris = 605; 
+        //1210
+        //847
+        //604
         int kolom = 7;
-        int baris_tes=518;
+        int baris_tes=518; 
         int kolom_tes=7;
         double error=0;
         double error2 = 0;
@@ -48,7 +51,7 @@ public class ANN2 {
         String[][] train = new String[kolom][baris];
         String[][] testing = new String[kolom_tes][baris_tes];
         double [][] test = new double [kolom_tes][baris_tes];
-        int maxEpoch = 10;
+        int maxEpoch = 1000;
         int epoch = 0;
         double x1, x2, x3, x4, x5, x6, target; //buat input summing function    
         double d2, db2;
@@ -57,7 +60,7 @@ public class ANN2 {
         
         try {
 
-            Workbook w = Workbook.getWorkbook(new File("D:\\don't open\\semester 6\\AI\\Tugasa besar 2\\Dataset1\\training1.xls")); //ambil data
+            Workbook w = Workbook.getWorkbook(new File("D:\\don't open\\semester 6\\AI\\Tugasa besar 2\\Dataset2\\training2 2003.xls")); //ambil data
             Sheet sh = w.getSheet(1);               //sheet kedua
 
             for (int i = 0; i < kolom; i++) {
@@ -290,7 +293,7 @@ public class ANN2 {
         //ambil data testing
         try {
 
-            Workbook w = Workbook.getWorkbook(new File("D:\\don't open\\semester 6\\AI\\Tugasa besar 2\\Dataset1\\testing 2003.xls")); //ambil data
+            Workbook w = Workbook.getWorkbook(new File("D:\\don't open\\semester 6\\AI\\Tugasa besar 2\\Dataset2\\testing2 2003.xls")); //ambil data
             Sheet sh = w.getSheet(1);               //sheet kedua
 
             for (int k = 0; k < kolom_tes; k++) {
@@ -421,17 +424,63 @@ public class ANN2 {
             error = Math.abs(target - output);
             //error2 = error2 + Math.pow(error, 2); //total error kuadrat
             double aa,bb,cc,dd;
+            double ee,ff,gg,hh;
+            ee=0.25;
+            ff=0.50;
+            gg=0.75;
+            hh=1.00;
             
-            System.out.println("error " +error+" output"+output);
-            aa=error-0.25;
-            bb=error-0.50;
-            cc=error-0.75;
-            dd=error-1.0;
-            System.out.println("aa "+aa+" bb "+bb+" cc "+cc+" dd "+dd);
-//            
-//            if(((output>0)&&(output<0.25))||((output>0.25)&&(output<0.50))||((output>0.50)&&(output<0.75))||((output>0.75)&&(output<1.0))){
-//                benar++;
+            //System.out.println("error " +error+" output"+output);
+            aa=Math.abs(error-ee);
+            bb=Math.abs(error-ff);
+            cc=Math.abs(error-gg);
+            dd=Math.abs(error-hh);
+            //System.out.println("aa "+aa+" bb "+bb+" cc "+cc+" dd "+dd);
+            
+//            if((aa<bb)||(aa<cc)||(aa<dd)&&(bb<aa)||(bb<cc)||(bb<cc)||(bb<dd)&&(cc<dd)||(cc<bb)&&(dd<cc)||(dd<aa)||(dd<bb)){
+//                if((ee==target)){
+//                    benar++;
+//                }if((ff==target)){
+//                    benar++;
+//                }if((gg==target)){
+//                    benar++;
+//                }if((hh==target)){
+//                    benar++;
+//                }
 //            }
+// 
+////            if ((aa < bb) ) {
+////                if ((ee == target)) {
+////                    benar++;
+////                }
+////                if ((ff == target)) {
+////                    benar++;
+////                }
+////                if ((gg == target)) {
+////                    benar++;
+////                }
+////                if ((hh == target)) {
+////                    benar++;
+////                }
+////            }
+//            
+            if(((output>0)||(output<0.25))){
+                if(ee == target ){
+                    benar++;
+                }
+            }if(((output>0.25)||(output<0.50))){
+                if(ff == target ){
+                    benar++;
+                }
+            }if(((output>0.50)||(output<0.75))){
+                if(gg == target ){
+                    benar++;
+                }
+            }if(((output>0.75)||(output<1))){
+                if(hh == target ){
+                    benar++;
+                }
+            }
             System.out.println((i+1)+" target "+target+" output "+output+" benar "+benar);
         }
             double akurasi = (benar/baris_tes)*100;
