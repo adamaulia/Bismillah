@@ -29,15 +29,15 @@ public class ANN2 {
         // TODO code application logic here
         
         System.out.println(" ANN 2");
-        double alpha = 0.1;
-        int hn = 5; //hidden neuron
+        double alpha = 0.6;
+        int hn = 2; //hidden neuron
         double[] y = new double[hn]; // summing function neuron
         double y2; //hasil summing function output
         double[] yy = new double[hn]; //fungsi aktifasi
         double[] b = new double[hn]; //bias hidden
         double output = 0; //output 
         double boutput; //bias output
-        int baris = 605; 
+        int baris = 847; 
         //1210
         //847
         //604
@@ -210,7 +210,7 @@ public class ANN2 {
         boutput = r.nextDouble();
        
         
-        while(epoch < 1000){
+        while(epoch < 500){
              
             //ambil data
             for (int i = 0; i < baris; i++) { //baris
@@ -432,10 +432,10 @@ public class ANN2 {
             hh=1.00;
             
             //System.out.println("error " +error+" output"+output);
-            aa=Math.abs(error-ee);
-            bb=Math.abs(error-ff);
-            cc=Math.abs(error-gg);
-            dd=Math.abs(error-hh);
+            aa=Math.abs(output-ee);
+            bb=Math.abs(output-ff);
+            cc=Math.abs(output-gg);
+            dd=Math.abs(output-hh);
             //System.out.println("aa "+aa+" bb "+bb+" cc "+cc+" dd "+dd);
             
 //            if((aa<bb)||(aa<cc)||(aa<dd)&&(bb<aa)||(bb<cc)||(bb<cc)||(bb<dd)&&(cc<dd)||(cc<bb)&&(dd<cc)||(dd<aa)||(dd<bb)){
@@ -465,20 +465,24 @@ public class ANN2 {
 ////                }
 ////            }
 //            
-            if(((output>0)||(output<0.25))){
-                if(ee == target ){
+            
+            if (target == 0.25) {
+                if (aa < bb) {
                     benar++;
                 }
-            }if(((output>0.25)||(output<0.50))){
-                if(ff == target ){
+            }
+            if (target == 0.50) {
+                if ((bb < cc) &&(cc > bb)){
                     benar++;
                 }
-            }if(((output>0.50)||(output<0.75))){
-                if(gg == target ){
+            }
+            if (target == 0.75) {
+                if ((cc < dd) &&(dd > cc)){
                     benar++;
                 }
-            }if(((output>0.75)||(output<1))){
-                if(hh == target ){
+            }
+            if (target == 1.00) {
+                if (dd < cc) {
                     benar++;
                 }
             }
@@ -488,7 +492,7 @@ public class ANN2 {
             MSE=error2/baris_tes;
             double akurasi = (benar/baris_tes)*100;
             double akurasi2 = (1-Math.sqrt(MSE))*100;
-            System.out.println(" akurasi "+akurasi2);
+            System.out.println(" akurasi "+akurasi);
     }
 
     }
